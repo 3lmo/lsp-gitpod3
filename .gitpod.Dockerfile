@@ -8,6 +8,7 @@ FROM gitpod/workspace-full-vnc
 # RUN chmod a+x /ide/startup.sh
 RUN sudo add-apt-repository ppa:kelleyk/emacs
 RUN sudo apt-get update
+ENV DEBIAN_FRONTEND noninteractive
 RUN sudo apt-get install emacs27 -y
 USER gitpod
 
