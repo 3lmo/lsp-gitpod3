@@ -8,6 +8,17 @@
 /// <reference path="../typings/xterm.d.ts"/>
 
 // Use tsc version (yarn watch)
+// import { Terminal } from '../out/browser/public/Terminal';
+// import { AttachAddon } from '../addons/xterm-addon-attach/out/AttachAddon';
+// import { FitAddon } from '../addons/xterm-addon-fit/out/FitAddon';
+// import { SearchAddon, ISearchOptions } from '../addons/xterm-addon-search/out/SearchAddon';
+// import { SerializeAddon } from '../addons/xterm-addon-serialize/out/SerializeAddon';
+// import { WebLinksAddon } from '../addons/xterm-addon-web-links/out/WebLinksAddon';
+// import { WebglAddon } from '../addons/xterm-addon-webgl/out/WebglAddon';
+// import { Unicode11Addon } from '../addons/xterm-addon-unicode11/out/Unicode11Addon';
+// import { LigaturesAddon } from '../addons/xterm-addon-ligatures/out/LigaturesAddon';
+
+// Use webpacked version (yarn package)
 import { Terminal } from 'xterm';
 import { AttachAddon } from 'xterm-addon-attach';
 import { FitAddon } from 'xterm-addon-fit';
@@ -16,17 +27,6 @@ import { SerializeAddon } from 'xterm-addon-serialize';
 import { WebLinksAddon } from 'xterm-addon-web-links';
 import { WebglAddon } from 'xterm-addon-webgl';
 import { Unicode11Addon } from 'xterm-addon-unicode11';
-import { LigaturesAddon } from 'xterm-addon-ligatures';
-
-// Use webpacked version (yarn package)
-// import { Terminal } from '../lib/xterm';
-// import { AttachAddon } from 'xterm-addon-attach';
-// import { FitAddon } from 'xterm-addon-fit';
-// import { SearchAddon, ISearchOptions } from 'xterm-addon-search';
-// import { SerializeAddon } from 'xterm-addon-serialize';
-// import { WebLinksAddon } from 'xterm-addon-web-links';
-// import { WebglAddon } from 'xterm-addon-webgl';
-// import { Unicode11Addon } from 'xterm-addon-unicode11';
 // import { LigaturesAddon } from 'xterm-addon-ligatures';
 
 // Pulling in the module's types relies on the <reference> above, it's looks a
@@ -43,7 +43,7 @@ export interface IWindowWithTerminal extends Window {
   WebLinksAddon?: typeof WebLinksAddon;
   WebglAddon?: typeof WebglAddon;
   Unicode11Addon?: typeof Unicode11Addon;
-  LigaturesAddon?: typeof LigaturesAddon;
+  // LigaturesAddon?: typeof LigaturesAddon;
 }
 declare let window: IWindowWithTerminal;
 
@@ -53,7 +53,8 @@ let socketURL;
 let socket;
 let pid;
 
-type AddonType = 'attach' | 'fit' | 'search' | 'serialize' | 'unicode11' | 'web-links' | 'webgl' | 'ligatures';
+type AddonType = 'attach' | 'fit' | 'search' | 'serialize' | 'unicode11' | 'web-links' | 'webgl';
+// type AddonType = 'attach' | 'fit' | 'search' | 'serialize' | 'unicode11' | 'web-links' | 'webgl' | 'ligatures';
 
 interface IDemoAddon<T extends AddonType> {
   name: T;
@@ -65,7 +66,7 @@ interface IDemoAddon<T extends AddonType> {
     T extends 'serialize' ? typeof SerializeAddon :
     T extends 'web-links' ? typeof WebLinksAddon :
     T extends 'unicode11' ? typeof Unicode11Addon :
-    T extends 'ligatures' ? typeof LigaturesAddon :
+    // T extends 'ligatures' ? typeof LigaturesAddon :
     typeof WebglAddon;
     instance?:
     T extends 'attach' ? AttachAddon :
@@ -74,8 +75,8 @@ interface IDemoAddon<T extends AddonType> {
     T extends 'serialize' ? SerializeAddon :
     T extends 'web-links' ? WebLinksAddon :
     T extends 'webgl' ? WebglAddon :
-    T extends 'unicode11' ? typeof Unicode11Addon :
-    T extends 'ligatures' ? typeof LigaturesAddon :
+    T extends 'unicode11' ? Unicode11Addon :
+    // T extends 'ligatures' ? LigaturesAddon :
     never;
 }
 
@@ -87,7 +88,7 @@ const addons: { [T in AddonType]: IDemoAddon<T>} = {
   'web-links': { name: 'web-links', ctor: WebLinksAddon, canChange: true },
   webgl: { name: 'webgl', ctor: WebglAddon, canChange: true },
   unicode11: { name: 'unicode11', ctor: Unicode11Addon, canChange: true },
-  ligatures: { name: 'ligatures', ctor: LigaturesAddon, canChange: true }
+  // ligatures: { name: 'ligatures', ctor: LigaturesAddon, canChange: true }
 };
 
 const terminalContainer = document.getElementById('terminal-container');
@@ -123,7 +124,7 @@ const disposeRecreateButtonHandler = () => {
     addons.search.instance = undefined;
     addons.serialize.instance = undefined;
     addons.unicode11.instance = undefined;
-    addons.ligatures.instance = undefined;
+    // addons.ligatures.instance = undefined;
     addons['web-links'].instance = undefined;
     addons.webgl.instance = undefined;
     document.getElementById('dispose').innerHTML = 'Recreate Terminal';
@@ -140,7 +141,7 @@ if (document.location.pathname === '/test') {
   window.SearchAddon = SearchAddon;
   window.SerializeAddon = SerializeAddon;
   window.Unicode11Addon = Unicode11Addon;
-  window.LigaturesAddon = LigaturesAddon;
+  // window.LigaturesAddon = LigaturesAddon;
   window.WebLinksAddon = WebLinksAddon;
   window.WebglAddon = WebglAddon;
 } else {
@@ -374,6 +375,7 @@ function initAddons(term: TerminalType): void {
     }
     addDomListener(checkbox, 'change', () => {
       if (checkbox.checked) {
+        // @ts-ignore
         addon.instance = new addon.ctor();
         term.loadAddon(addon.instance);
         if (name === 'webgl') {

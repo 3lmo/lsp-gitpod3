@@ -64,7 +64,12 @@ const clientConfig = {
     path: path.resolve(__dirname, 'dist')
   },
   mode: 'development',
-  watch: true
+  watch: true,
+  plugins: [
+    new webpack.DefinePlugin({
+      'process.env.NODE_DEBUG': JSON.stringify(process.env.NODE_DEBUG || false),
+    })
+  ]
 };
 const compiler = webpack(clientConfig);
 
